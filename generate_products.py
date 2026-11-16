@@ -128,10 +128,7 @@ def build_products():
     return products
 
 
-def main():
-    if DB_PATH.exists():
-        DB_PATH.unlink()  # always rebuild from scratch
-    conn = sqlite3.connect(DB_PATH)
+def create_products_table(conn):
     conn.execute("""
         CREATE TABLE products (
             id          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -143,9 +140,20 @@ def main():
             rating      REAL,
             stock       INTEGER DEFAULT 0
         )""")
+
+
+def insert_products(conn, products):
     conn.executemany(
         "INSERT INTO products (title, description, brand, category, price, rating, stock) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?)", build_products())
+        "VALUES (?, ?, ?, ?, ?, ?, ?)", products)
+
+
+def main():
+    if DB_PATH.exists():
+        DB_PATH.unlink()  # always rebuild from scratch
+    conn = sqlite3.connect(DB_PATH)
+    create_products_table(conn)
+    insert_products(conn, build_products())
     conn.commit()
     count = conn.execute("SELECT COUNT(*) FROM products").fetchone()[0]
     conn.close()
