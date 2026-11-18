@@ -1,9 +1,14 @@
 """FastAPI application.  Run with:  uvicorn app.main:app --reload"""
 from contextlib import asynccontextmanager
+from pathlib import Path
+import sys
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 import faiss
 from fastapi import FastAPI, HTTPException, Query
-
 from app.sanitize import InvalidQueryError
 from app.schemas import SearchResponse
 from app.search import SearchEngine
@@ -51,7 +56,17 @@ def create_app(engine: SearchEngine | None = None) -> FastAPI:
         app.state.engine.cache.clear()
         return {"status": "cleared"}
 
+    @app.get("/")
+    def home():
+        return {"message": "Product Search Engine API"}
+
     return app
 
 
 app = create_app()
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="127.0.0.1", port=8000)
