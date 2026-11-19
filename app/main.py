@@ -19,7 +19,7 @@ def build_default_engine() -> SearchEngine:
     """Loads the real DB, FAISS index and sentence-transformer model (done once at startup)."""
     from app.embedder import SentenceTransformerEncoder
     if not DB_PATH.exists() or not INDEX_PATH.exists():
-        raise RuntimeError("products.db / products.faiss not found. Run: python rebuild_all.py")
+        raise RuntimeError("products.db / products.faiss not found. Run: python build_project.py")
     return SearchEngine(DB_PATH, faiss.read_index(str(INDEX_PATH)), SentenceTransformerEncoder())
 
 

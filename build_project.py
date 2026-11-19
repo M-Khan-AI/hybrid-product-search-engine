@@ -1,4 +1,4 @@
-"""One command to rebuild everything:  python rebuild_all.py"""
+"""One command to rebuild everything:  python build_project.py"""
 import generate_products
 import build_fts
 import build_embeddings
