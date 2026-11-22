@@ -66,7 +66,7 @@ story = [
               "the SQLite product ids, which makes joining results back to product rows trivial.", body),
     Paragraph("4. Consequences", h),
     Paragraph("<b>Positive:</b> zero cost, no network dependency, offline-capable, simple reproducible rebuild "
-              "(<i>python rebuild_all.py</i>). <b>Negative:</b> no built-in metadata filtering (we post-filter using SQLite), "
+              "(<i>python build_project.py</i>). <b>Negative:</b> no built-in metadata filtering (we post-filter using SQLite), "
               "and the index must be rebuilt or updated whenever products change. "
               "<b>Revisit when:</b> the catalog grows beyond roughly 100k items, multiple users or services must query the "
               "same index, or hybrid vector-plus-filter queries become a core requirement. "

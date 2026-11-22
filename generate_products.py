@@ -127,10 +127,10 @@ def build_products():
                          round(rng.uniform(3.4, 5.0), 1), rng.randint(0, 300)))
     return products
 
-
 def create_products_table(conn):
+    """Create the products table in the database."""
     conn.execute("""
-        CREATE TABLE products (
+        CREATE TABLE IF NOT EXISTS products (
             id          INTEGER PRIMARY KEY AUTOINCREMENT,
             title       TEXT NOT NULL,
             description TEXT NOT NULL,
@@ -139,26 +139,44 @@ def create_products_table(conn):
             price       REAL NOT NULL,
             rating      REAL,
             stock       INTEGER DEFAULT 0
-        )""")
-
+        )
+    """)
 
 def insert_products(conn, products):
+    """Insert products into the products table."""
     conn.executemany(
-        "INSERT INTO products (title, description, brand, category, price, rating, stock) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?)", products)
+        """
+        INSERT INTO products
+        (title, description, brand, category, price, rating, stock)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """,
+        products
+    )
 
 
 def main():
     if DB_PATH.exists():
-        DB_PATH.unlink()  # always rebuild from scratch
-    conn = sqlite3.connect(DB_PATH)
-    create_products_table(conn)
-    insert_products(conn, build_products())
-    conn.commit()
-    count = conn.execute("SELECT COUNT(*) FROM products").fetchone()[0]
-    conn.close()
-    print(f"[generate_products] Inserted {count} products into {DB_PATH.name}")
+        DB_PATH.unlink()
 
+    conn = sqlite3.connect(DB_PATH)
+
+    create_products_table(conn)
+
+    products = build_products()
+    insert_products(conn, products)
+
+    conn.commit()
+
+    count = conn.execute(
+        "SELECT COUNT(*) FROM products"
+    ).fetchone()[0]
+
+    conn.close()
+
+    print(
+        f"[generate_products] Inserted {count} products into {DB_PATH.name}"
+    )
 
 if __name__ == "__main__":
     main()
+
