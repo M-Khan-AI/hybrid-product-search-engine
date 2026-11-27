@@ -8,7 +8,7 @@ def test_search_ok(client):
     body = r.json()
     assert body["count"] == len(body["results"]) <= 10
     assert body["cached"] is False
-    assert {"id", "title", "price", "score"} <= body["results"][0].keys()
+    assert {"id", "title", "price", "score", "name", "image_url"} <= body["results"][0].keys()
 
 
 def test_second_call_is_served_from_cache(client):

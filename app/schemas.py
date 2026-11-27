@@ -1,18 +1,22 @@
+
 """Pydantic models that define the shape of the API response."""
+
 from pydantic import BaseModel
 
 
 class ProductResult(BaseModel):
     id: int
     title: str
+    name: str
+    image_url: str | None = None
     description: str
     brand: str
     category: str
     price: float
     rating: float | None = None
-    bm25_score: float      # normalised keyword score (0-1)
-    vector_score: float    # normalised semantic score (0-1)
-    score: float           # merged final score (0-1)
+    bm25_score: float
+    vector_score: float
+    score: float
 
 
 class SearchResponse(BaseModel):
